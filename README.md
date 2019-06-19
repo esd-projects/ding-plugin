@@ -15,7 +15,19 @@ $ composer require esd/ding-plugin -vvv
    ding:
      hook: #钉钉群机器人hook
    ```
+## 添加 DingPlugin 插件
 
+   ```
+   app/Application 的 main 中添加插件
+   
+    public static function main()
+     {
+       $application = new GoApplication();
+       $application->addPlug(new DingPlugin());
+       $application->run();
+     }
+   ```
+   
 ## 通用响应
 
 | 参数  | 类型  | 是否必须  | 描述  |
