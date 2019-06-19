@@ -1,14 +1,12 @@
 钉钉扩展包，当前只封装了 *hook* 功能
 
+针对项目异常报错，通知钉钉群
+
 ## 安装
 
 ``` bash
 $ composer require esd/ding-plugin -vvv
 ```
-
-## 通用配置
-
- - hook: 群机器人hook
 
 ## 配置参数
 
