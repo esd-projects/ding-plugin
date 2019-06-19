@@ -1,0 +1,24 @@
+{
+    "name": "esd/ding-plugin",
+    "description": "esd/ding-plugin",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "qiuapeng921",
+            "email": "qiuapeng921@163.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "ESD\\Plugins\\": "src/"
+        }
+    },
+    "require": {
+        "esd/esd-core": "~0.1",
+        "ext-curl": "*"
+    },
+    "require-dev": {
+        "esd/esd-co-server": "~0.1"
+    }
+}
