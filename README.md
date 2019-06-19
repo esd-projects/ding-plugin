@@ -3,7 +3,7 @@
 ## 安装
 
 ``` bash
-$ composer require esd/ding -vvv
+$ composer require esd/ding-plugin -vvv
 ```
 
 ## 通用配置
