@@ -16,6 +16,8 @@
     },
     "require": {
         "esd/esd-core": "~0.1",
+        "esd/saber-plugin": "~0.1",
+        "esd/aop-plugin": "~0.1",
         "ext-curl": "*"
     },
     "require-dev": {

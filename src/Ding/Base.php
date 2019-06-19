@@ -2,6 +2,11 @@
 
 namespace ESD\Plugins\Ding;
 
+use ESD\Core\Plugins\Logger\GetLogger;
+use Monolog\Logger;
+use Swlib\Http\ContentType;
+use Swlib\Saber;
+
 /**
  * Class BaseObject
  * @package Jormin\Qiniu
@@ -9,68 +14,57 @@ namespace ESD\Plugins\Ding;
 class Base
 {
     /**
-     * 失败
-     *
-     * @param $message
-     * @param null $data
-     * @return array
+     * @var Saber
      */
-    public function error($message, $data = null)
-    {
-        is_object($data) && $data = (array)$data;
-        $return = ['success' => false, 'message' => $message, 'data' => $data];
-        return $return;
-    }
+    private static $http_client;
 
+
+    const API_URL = "https://oapi.dingtalk.com";
     /**
-     * 成功
-     *
-     * @param $message
-     * @param null $data
-     * @return array
+     * @var string
      */
-    public function success($message, $data = null)
-    {
-        is_object($data) && $data = (array)$data;
-        $return = ['success' => true, 'message' => $message, 'data' => $data];
-        return $return;
-    }
+    private $hook;
 
+    use GetLogger;
+    /**
+     * Base constructor.
+     * @param DingConfig $dingConfig
+     */
+    public function __construct(DingConfig $dingConfig)
+    {
+        $this->hook = "/robot/send?access_token=" . $dingConfig->getToken();
+    }
 
     /**
      * 发送消息
      * @param $data
-     * @return array
+     *
+     * @return void
+     *
      */
     protected function send($data)
     {
-        $response = $this->request($this->hook, json_encode($data));
-        if($response['errcode'] !== 0){
-            return $this->error($response['errmsg'], $response);
+        $response = self::client()->post($this->hook,json_encode($data),['headers' => ['content-type' => ContentType::JSON]]);
+        if ($response->success) {
+            $this->log(Logger::INFO,"钉钉通知成功");
+        }else{
+            $this->log(Logger::ERROR,$response);
         }
-        return $this->success('发送成功', $response);
     }
 
     /**
-     * 请求
-     * @param $url
-     * @param $postData
-     * @return bool|string
+     * 获取一个协程客户端
+     * @return Saber 返回客户端
      */
-    protected function request($url, $postData)
+    private static function client(): Saber
     {
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_POST, 1);
-        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json;charset=utf-8'));
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $postData);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        // 线下环境不用开启curl证书验证, 未调通情况可尝试添加该代码
-        // curl_setopt ($ch, CURLOPT_SSL_VERIFYHOST, 0);
-        // curl_setopt ($ch, CURLOPT_SSL_VERIFYPEER, 0);
-        $data = curl_exec($ch);
-        curl_close($ch);
-        return json_decode($data, true);
+        if (empty(self::$http_client)) {
+            self::$http_client = Saber::create([
+                'base_uri' => self::API_URL,
+                'use_pool' => true,
+                'timeout' => 1,
+            ]);
+        }
+        return self::$http_client;
     }
 }

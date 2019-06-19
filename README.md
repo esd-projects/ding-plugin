@@ -13,7 +13,7 @@ $ composer require esd/ding-plugin -vvv
    ```
    application-local.yml 中按需增加配置
    ding:
-     hook: #钉钉群机器人hook
+     token: #钉钉群机器人token
    ```
 ## 添加 DingPlugin 插件
 

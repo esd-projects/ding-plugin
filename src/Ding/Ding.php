@@ -2,30 +2,21 @@
 
 namespace ESD\Plugins\Ding;
 
-use ESD\Server\Co\Server;
-
 /**
  * Class Ding
  * @package ESD\Plugins\Ding
  */
 class Ding extends Base
 {
-    /**
-     * @var string 机器人hook
-     */
-    protected $hook;
-
-    public function __construct()
-    {
-        $this->hook = Server::$instance->getConfigContext()->get(DingConfig::key);
-    }
 
     /**
      * 发送文本消息
      * @param string $content 消息内容
      * @param array $mobiles 被@人的手机号(在content里添加@人的手机号)
      * @param bool $isAtAll @所有人时：true，否则为：false
-     * @return array
+     *
+     * @return void
+     *
      */
     public function sendText($content, $mobiles = [], $isAtAll = false)
     {
@@ -39,7 +30,7 @@ class Ding extends Base
                 'isAtAll'   => $isAtAll
             ]
         ];
-        return $this->send($data);
+        $this->send($data);
     }
 
     /**
@@ -48,7 +39,9 @@ class Ding extends Base
      * @param string $text 消息内容。如果太长只会部分展示
      * @param string $messageUrl 点击消息跳转的URL
      * @param string $picUrl 图片URL
-     * @return array
+     *
+     * @return void
+     *
      */
     public function sendLink($title, $text, $messageUrl, $picUrl = '')
     {
@@ -61,7 +54,7 @@ class Ding extends Base
                 'picUrl'     => $picUrl,
             ]
         ];
-        return $this->send($data);
+        $this->send($data);
     }
 
     /**
@@ -70,7 +63,9 @@ class Ding extends Base
      * @param string $text markdown格式的消息
      * @param array $mobiles 被@人的手机号(在content里添加@人的手机号)
      * @param bool $isAtAll @所有人时：true，否则为：false
-     * @return array
+     *
+     * @return void
+     *
      */
     public function sendMarkdown($title, $text, $mobiles = [], $isAtAll = false)
     {
@@ -85,7 +80,7 @@ class Ding extends Base
                 'isAtAll'   => $isAtAll
             ]
         ];
-        return $this->send($data);
+        $this->send($data);
     }
 
     /**
@@ -95,7 +90,9 @@ class Ding extends Base
      * @param array $btns 按钮，每个元素包含 title(按钮方案)、actionURL(点击按钮触发的URL)
      * @param int $btnOrientation 0-按钮竖直排列，1-按钮横向排列
      * @param int $hideAvatar 0-正常发消息者头像，1-隐藏发消息者头像
-     * @return array
+     *
+     * @return void
+     *
      */
     public function sendActionCard($title, $text, $btns = [], $btnOrientation = 0, $hideAvatar = 0)
     {
@@ -115,13 +112,15 @@ class Ding extends Base
         }else{
             $data['actionCard']['btns'] = $btns;
         }
-        return $this->send($data);
+        $this->send($data);
     }
 
     /**
      * 发送FeedCard
      * @param array $links 链接，每个元素包含 title(单条信息文本)、messageURL(点击单条信息到跳转链接)、picURL(单条信息后面图片的URL)
-     * @return array
+     *
+     * @return void
+     *
      */
     public function sendFeedCard($links = [])
     {
@@ -131,7 +130,6 @@ class Ding extends Base
                 'links' => $links
             ]
         ];
-        return $this->send($data);
+        $this->send($data);
     }
-
 }
